@@ -1,6 +1,6 @@
 ---
 title: "Documentação Consolidada — Fluxos de Rede no firewall fisico"
-summary: "Este README reúne em um único lugar os fluxos de tratamentos de recursos de rede usados neste projeto: NAT, Load Balancer, VPN e Public Address e demais itens. Inclui diagramas (Mermaid), templates genéricos (YAML/CLI) e checklists de validação."
+summary: "Este README reúne em um único lugar os fluxos de tratamentos de recursos de rede usados neste projeto: Organizations, DNAT, SNAT, UNAT, VPN. Inclui diagramas (Mermaid), templates genéricos (YAML/CLI) e checklists de validação."
 ---
 
 # Documentação Consolidada — Fluxos de Rede
