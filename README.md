@@ -12,11 +12,12 @@ Este README reúne em um único lugar os fluxos de tratamentos de recursos de re
 ## Índice
 
 - [Visão Geral e Convenções](#visão-geral-e-convenções)
-- [TAGs](TAGs.md#tag)
-- [DNAT](Dnat.md#dnat)
+- [TAG](TAG.md#tag)
+- [DNAT](DNAT.md#dnat)
 - [SNAT](SNAT.md#snat)
-- [UNAT](Unat.md#unat)
-- [VPNs](VPNs.md#vpns)
+- [UNAT](UNAT.md#unat)
+- [SDN_VPN](SDN_VPN.md#sdn-vpn)
+- [Public Addresses](PUBLIC_ADDRESS.md#public-addresses)
 ---
 
 ## Visão Geral e Convenções
