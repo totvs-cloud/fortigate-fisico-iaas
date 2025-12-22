@@ -1,98 +1,103 @@
-## TAG
+## DNAT
 
-**Objetivo:** Criação e remoção de Tag no Paloalto. Esse recurso está dentro do fluxo de criação de Organization. v2.4.paloalto.tag.create
+**Objetivo:** A regra DNAT (Destination Network Address Translation) é utilizada para publicar uma aplicação que esteja em sua máquina virtual IaaS para a internet. É um acesso de entrada onde a origem é internet ( sendo uma origem restrita ou não ) e o destino é o IP Público e Porta externa IaaS, onde a regra DNAT faz a tradução para o IP Privado de sua máquina virtual, na Porta interna e Protocolo de sua aplicação.
 
-### Fluxo
+### Fluxo - Criação de DNAT
 
 ```mermaid
 flowchart TB
-  v2_1_nsxt_tier1_create["v2.1.nsxt.tier1.create"] -->|next| v2_2_nsxt_locale_service_create["v2.2.nsxt.locale.service.create"]
-  v2_1_nsxt_tier1_create["v2.1.nsxt.tier1.create"] -->|error| v2_5_nsxt_tier1_create_error_delete["v2.5.nsxt.tier1.create.error.delete"]
-  v2_2_nsxt_locale_service_create["v2.2.nsxt.locale.service.create"] -->|next| v2_3_nsxt_policy_create["v2.3.nsxt.policy.create"]
-  v2_2_nsxt_locale_service_create["v2.2.nsxt.locale.service.create"] -->|error| v2_4_nsxt_locale_service_create_error_delete["v2.4.nsxt.locale.service.create.error.delete"]
-  v2_3_nsxt_policy_create["v2.3.nsxt.policy.create"] -->|next| v2_4_paloalto_tag_create["v2.4.paloalto.tag.create"]
-  v2_3_nsxt_policy_create["v2.3.nsxt.policy.create"] -->|error| v2_3_nsxt_poliy_create_error_delete["v2.3.nsxt.poliy.create.error.delete"]
-  v2_4_nsxt_rule_create["v2.4.nsxt.rule.create"] -->|next| v2_5_paloalto_tag_create["v2.5.paloalto.tag.create"]
-  v2_4_nsxt_rule_create["v2.4.nsxt.rule.create"] -->|error| v2_3_nsxt_poliy_create_error_delete["v2.3.nsxt.poliy.create.error.delete"]
-  v2_4_paloalto_tag_create["v2.4.paloalto.tag.create"] -->|next| v2_5_vsphere_create_folder["v2.5.vsphere.create.folder"]
-  v2_4_paloalto_tag_create["v2.4.paloalto.tag.create"] -->|error| v2_2_paloalto_tag_create_error_delete["v2.2.paloalto.tag.create.error.delete"]
-  v2_5_vsphere_create_folder["v2.5.vsphere.create.folder"] -->|next| v2_organization_create["v2.organization.create"]
-  v2_5_vsphere_create_folder["v2.5.vsphere.create.folder"] -->|error| v2_1_vsphere_create_folder_error_delete["v2.1.vsphere.create.folder.error.delete"]
-  v2_1_vsphere_create_folder_error_delete["v2.1.vsphere.create.folder.error.delete"] -->|next| v2_2_paloalto_tag_create_error_delete["v2.2.paloalto.tag.create.error.delete"]
-  v2_1_vsphere_create_folder_error_delete["v2.1.vsphere.create.folder.error.delete"] -->|error| v2_organization_create["v2.organization.create"]
-  v2_2_paloalto_tag_create_error_delete["v2.2.paloalto.tag.create.error.delete"] -->|next| v2_3_nsxt_policy_create_error_delete["v2.3.nsxt.policy.create.error.delete"]
-  v2_2_paloalto_tag_create_error_delete["v2.2.paloalto.tag.create.error.delete"] -->|error| v2_organization_create["v2.organization.create"]
-  v2_3_nsxt_policy_create_error_delete["v2.3.nsxt.policy.create.error.delete"] -->|next| v2_4_nsxt_locale_service_create_error_delete["v2.4.nsxt.locale.service.create.error.delete"]
-  v2_3_nsxt_policy_create_error_delete["v2.3.nsxt.policy.create.error.delete"] -->|error| v2_organization_create["v2.organization.create"]
-  v2_4_nsxt_locale_service_create_error_delete["v2.4.nsxt.locale.service.create.error.delete"] -->|next| v2_5_nsxt_tier1_create_error_delete["v2.5.nsxt.tier1.create.error.delete"]
-  v2_4_nsxt_locale_service_create_error_delete["v2.4.nsxt.locale.service.create.error.delete"] -->|error| v2_organization_create["v2.organization.create"]
-  v2_5_nsxt_tier1_create_error_delete["v2.5.nsxt.tier1.create.error.delete"] -->|next| v2_organization_create["v2.organization.create"]
-  v2_5_nsxt_tier1_create_error_delete["v2.5.nsxt.tier1.create.error.delete"] -->|error| v2_organization_create["v2.organization.create"]
-
+  v2_1_paloalto_service_create["v2.1.paloalto.service.create"] -->|next| v2_2_paloalto_host_create["v2.2.paloalto.host.create"]
+  v2_1_paloalto_service_create["v2.1.paloalto.service.create"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_2_paloalto_host_create["v2.2.paloalto.host.create"] -->|next| v2_3_paloalto_rule_create["v2.3.paloalto.rule.create"]
+  v2_2_paloalto_host_create["v2.2.paloalto.host.create"] -->|error| v2_5_paloalto_host_create_error_delete["v2.5.paloalto.host.create.error.delete"]
+  v2_3_paloalto_rule_create["v2.3.paloalto.rule.create"] -->|next| v2_4_paloalto_rule_edit["v2.4.paloalto.rule.edit"]
+  v2_3_paloalto_rule_create["v2.3.paloalto.rule.create"] -->|error| v2_4_paloalto_rule_create_error_delete["v2.4.paloalto.rule.create.error.delete"]
+  v2_4_paloalto_rule_edit["v2.4.paloalto.rule.edit"] -->|next| v2_5_paloalto_dnat_create["v2.5.paloalto.dnat.create"]
+  v2_4_paloalto_rule_edit["v2.4.paloalto.rule.edit"] -->|error| v2_3_paloalto_rule_edit_error_edit["v2.3.paloalto.rule.edit.error.edit"]
+  v2_5_paloalto_dnat_create["v2.5.paloalto.dnat.create"] -->|next| v2_6_paloalto_dnat_edit["v2.6.paloalto.dnat.edit"]
+  v2_5_paloalto_dnat_create["v2.5.paloalto.dnat.create"] -->|error| v2_2_paloalto_dnat_create_error_delete["v2.2.paloalto.dnat.create.error.delete"]
+  v2_6_paloalto_dnat_edit["v2.6.paloalto.dnat.edit"] -->|next| v2_7_fortinet_address_create["v2.7.fortinet.address.create"]
+  v2_6_paloalto_dnat_edit["v2.6.paloalto.dnat.edit"] -->|error| v2_1_paloalto_dnat_edit_error_edit["v2.1.paloalto.dnat.edit.error.edit"]
+  v2_7_fortinet_address_create["v2.7.fortinet.address.create"] -->|next| v2_8_fortinet_vip_create["v2.8.fortinet.vip.create"]
+  v2_7_fortinet_address_create["v2.7.fortinet.address.create"] -->|error| v2_3_fortinet_address_create_error_delete["v2.3.fortinet.address.create.error.delete"]
+  v2_8_fortinet_vip_create["v2.8.fortinet.vip.create"] -->|next| v2_dnat_create["v2.dnat.create"]
+  v2_8_fortinet_vip_create["v2.8.fortinet.vip.create"] -->|error| v2_2_fortinet_vip_create_error_delete["v2.2.fortinet.vip.create.error.delete"]
+  v2_1_paloalto_dnat_edit_error_edit["v2.1.paloalto.dnat.edit.error.edit"] -->|next| v2_2_paloalto_dnat_create_error_delete["v2.2.paloalto.dnat.create.error.delete"]
+  v2_1_paloalto_dnat_edit_error_edit["v2.1.paloalto.dnat.edit.error.edit"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_2_fortinet_vip_create_error_delete["v2.2.fortinet.vip.create.error.delete"] -->|next| v2_3_fortinet_address_create_error_delete["v2.3.fortinet.address.create.error.delete"]
+  v2_2_fortinet_vip_create_error_delete["v2.2.fortinet.vip.create.error.delete"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_2_paloalto_dnat_create_error_delete["v2.2.paloalto.dnat.create.error.delete"] -->|next| v2_3_paloalto_host_create_error_delete["v2.3.paloalto.host.create.error.delete"]
+  v2_2_paloalto_dnat_create_error_delete["v2.2.paloalto.dnat.create.error.delete"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_3_fortinet_address_create_error_delete["v2.3.fortinet.address.create.error.delete"] -->|next| v2_2_paloalto_dnat_create_error_delete["v2.2.paloalto.dnat.create.error.delete"]
+  v2_3_fortinet_address_create_error_delete["v2.3.fortinet.address.create.error.delete"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_3_paloalto_rule_edit_error_edit["v2.3.paloalto.rule.edit.error.edit"] -->|next| v2_4_paloalto_rule_create_error_delete["v2.4.paloalto.rule.create.error.delete"]
+  v2_3_paloalto_rule_edit_error_edit["v2.3.paloalto.rule.edit.error.edit"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_4_paloalto_rule_create_error_delete["v2.4.paloalto.rule.create.error.delete"] -->|next| v2_5_paloalto_host_create_error_delete["v2.5.paloalto.host.create.error.delete"]
+  v2_4_paloalto_rule_create_error_delete["v2.4.paloalto.rule.create.error.delete"] -->|error| v2_dnat_create["v2.dnat.create"]
+  v2_5_paloalto_host_create_error_delete["v2.5.paloalto.host.create.error.delete"] -->|next| v2_dnat_create["v2.dnat.create"]
+  v2_5_paloalto_host_create_error_delete["v2.5.paloalto.host.create.error.delete"] -->|error| v2_dnat_create["v2.dnat.create"]
 ```
 
-## Micro Serviço paloalto-tag - create
+## Serviços envolvidos
 
-### Fluxo
+- [v2.1.paloalto.service.create](paloalto-service.md#fluxo---service-create)
+- [v2.2.paloalto.host.create](paloalto-host.md#fluxo---host-create)
+- [v2.3.paloalto.rule.create](paloalto-rule.md#fluxo---rule-create)
+- [v2.4.paloalto.rule.edit](paloalto-rule.md#fluxo---rule-edit)
+- [v2.5.paloalto.dnat.create](paloalto-nat.md#fluxo---dnat-create)
+- [v2.6.paloalto.dnat.edit](paloalto-nat.md#fluxo---dnat-edit)
+---
+
+### Fluxo - Edição de DNAT
 
 ```mermaid
-flowchart LR
-  Start([Start])
-  ForEach["Loop: para cada tag"]
-  Check{Existe Paloalto?}
-  CreateClient["Iniciar client PaloAlto"]
-  GetTag["Get tag por nome"]
-  Exists{Tag existe?}
-  CreateTag["Criar tag"]
-  SetUpdate["update = true"]
-  Next["Próximo tag"]
-  ReturnOK["Retorna COMPLETED (update true/false)"]
-  Error["Retorna ERROR"]
-
-  Start --> ForEach --> Check
-  Check -- Não --> Error
-  Check -- Sim --> CreateClient --> GetTag
-  GetTag --> Exists
-  Exists -- Sim --> Next
-  Exists -- Não --> CreateTag --> SetUpdate --> Next
-  Next --> ForEach
-  ForEach -->|todos processados| ReturnOK
+flowchart TB
+  v2_1_paloalto_service_create["v2.1.paloalto.service.create"] -->|next| v2_2_paloalto_host_delete["v2.2.paloalto.host.delete"]
+  v2_1_paloalto_service_create["v2.1.paloalto.service.create"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_2_paloalto_host_delete["v2.2.paloalto.host.delete"] -->|next| v2_3_paloalto_host_create["v2.3.paloalto.host.create"]
+  v2_2_paloalto_host_delete["v2.2.paloalto.host.delete"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_3_paloalto_host_create["v2.3.paloalto.host.create"] -->|next| v2_4_paloalto_rule_delete["v2.4.paloalto.rule.delete"]
+  v2_3_paloalto_host_create["v2.3.paloalto.host.create"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_4_paloalto_rule_delete["v2.4.paloalto.rule.delete"] -->|next| v2_5_paloalto_rule_create["v2.5.paloalto.rule.create"]
+  v2_4_paloalto_rule_delete["v2.4.paloalto.rule.delete"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_5_paloalto_rule_create["v2.5.paloalto.rule.create"] -->|next| v2_6_paloalto_rule_edit["v2.6.paloalto.rule.edit"]
+  v2_5_paloalto_rule_create["v2.5.paloalto.rule.create"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_6_paloalto_rule_edit["v2.6.paloalto.rule.edit"] -->|next| v2_7_paloalto_dnat_delete["v2.7.paloalto.dnat.delete"]
+  v2_6_paloalto_rule_edit["v2.6.paloalto.rule.edit"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_7_paloalto_dnat_delete["v2.7.paloalto.dnat.delete"] -->|next| v2_8_paloalto_dnat_create["v2.8.paloalto.dnat.create"]
+  v2_7_paloalto_dnat_delete["v2.7.paloalto.dnat.delete"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_8_paloalto_dnat_create["v2.8.paloalto.dnat.create"] -->|next| v2_9_paloalto_dnat_edit["v2.9.paloalto.dnat.edit"]
+  v2_8_paloalto_dnat_create["v2.8.paloalto.dnat.create"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_9_paloalto_dnat_edit["v2.9.paloalto.dnat.edit"] -->|next| v2_10_fortinet_address_delete["v2.10.fortinet.address.delete"]
+  v2_9_paloalto_dnat_edit["v2.9.paloalto.dnat.edit"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_10_fortinet_address_delete["v2.10.fortinet.address.delete"] -->|next| v2_11_fortinet_address_create["v2.11.fortinet.address.create"]
+  v2_10_fortinet_address_delete["v2.10.fortinet.address.delete"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_11_fortinet_address_create["v2.11.fortinet.address.create"] -->|next| v2_12_fortinet_vip_delete["v2.12.fortinet.vip.delete"]
+  v2_11_fortinet_address_create["v2.11.fortinet.address.create"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_12_fortinet_vip_delete["v2.12.fortinet.vip.delete"] -->|next| v2_13_fortinet_vip_create["v2.13.fortinet.vip.create"]
+  v2_12_fortinet_vip_delete["v2.12.fortinet.vip.delete"] -->|error| v2_dnat_edit["v2.dnat.edit"]
+  v2_13_fortinet_vip_create["v2.13.fortinet.vip.create"] -->|next| v2_dnat_edit["v2.dnat.edit"]
+  v2_13_fortinet_vip_create["v2.13.fortinet.vip.create"] -->|error| v2_dnat_edit["v2.dnat.edit"]
 ```
 
-### Payload no Micro Serviço
+### Fluxo - Remoção de DNAT
 
-```json
-{
-  "PaloaltoTag": [
-    {
-      "ID": 6781,
-      "CreatedAt": "2025-12-16T14:55:59Z",
-      "UpdatedAt": "2025-12-16T14:55:59Z",
-      "DeletedAt": null,
-      "OrganizationID": 3949,
-      "Name": "T13726_C1B7HY_iaas",
-      "Identifier": "fisico"
-    }
-  ]
-}
+```mermaid
+flowchart TB
+  v2_1_paloalto_rule_delete["v2.1.paloalto.rule.delete"] -->|next| v2_2_paloalto_rule_edit["v2.2.paloalto.rule.edit"]
+  v2_1_paloalto_rule_delete["v2.1.paloalto.rule.delete"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_2_paloalto_rule_edit["v2.2.paloalto.rule.edit"] -->|next| v2_3_paloalto_dnat_delete["v2.3.paloalto.dnat.delete"]
+  v2_2_paloalto_rule_edit["v2.2.paloalto.rule.edit"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_3_paloalto_dnat_delete["v2.3.paloalto.dnat.delete"] -->|next| v2_4_paloalto_dnat_edit["v2.4.paloalto.dnat.edit"]
+  v2_3_paloalto_dnat_delete["v2.3.paloalto.dnat.delete"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_4_paloalto_dnat_edit["v2.4.paloalto.dnat.edit"] -->|next| v2_5_paloalto_service_delete["v2.5.paloalto.service.delete"]
+  v2_4_paloalto_dnat_edit["v2.4.paloalto.dnat.edit"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_5_paloalto_service_delete["v2.5.paloalto.service.delete"] -->|next| v2_6_paloalto_host_delete["v2.6.paloalto.host.delete"]
+  v2_5_paloalto_service_delete["v2.5.paloalto.service.delete"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_6_paloalto_host_delete["v2.6.paloalto.host.delete"] -->|next| v2_7_fortinet_address_delete["v2.7.fortinet.address.delete"]
+  v2_6_paloalto_host_delete["v2.6.paloalto.host.delete"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_7_fortinet_address_delete["v2.7.fortinet.address.delete"] -->|next| v2_8_fortinet_vip_delete["v2.8.fortinet.vip.delete"]
+  v2_7_fortinet_address_delete["v2.7.fortinet.address.delete"] -->|error| v2_dnat_delete["v2.dnat.delete"]
+  v2_8_fortinet_vip_delete["v2.8.fortinet.vip.delete"] -->|next| v2_dnat_delete["v2.dnat.delete"]
+  v2_8_fortinet_vip_delete["v2.8.fortinet.vip.delete"] -->|error| v2_dnat_delete["v2.dnat.delete"]
 ```
-
-### End-Point API PaloAlto
-
-> /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys2']/tag/entry[@name='T13726_C1B7HY_iaas']
-
-### Payload API PaloAlto
-
-```json
-{
-  "Name": "TFDFA0_CP2RY7_iaas",
-  "Path": "tag",
-  "Color": "color9",
-  "Comments": "TFDFA0_CP2RY7_iaas"
-}
-
-```
-
-
-
- 
