@@ -34,7 +34,7 @@ flowchart TD
 
 > /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys2']/nat/entry[@name='TEZAX9_CSV7UN_iaas']
 
-### Payload API PaloAlto - Address Object
+### Payload API PaloAlto - Nat Object
 
 ```json
 {
@@ -98,7 +98,7 @@ flowchart TD
 
 > /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys2']/nat/entry[@name='TEZAX9_CSV7UN_iaas']
 
-### Payload API PaloAlto - Address Object
+### Payload API PaloAlto - Nat Object
 
 ```json
 {
