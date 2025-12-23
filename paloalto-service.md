@@ -24,34 +24,18 @@ flowchart TD
   K --> L
 ```
 
-## Payload no Micro Serviço
-
-```json
-{
-  "Name":"TCP-63000",
-  "Path":"service",
-  "Port": { 
-    "Port":"63000"
-  }
-}
-```
-
 ### End-Point API PaloAlto
 
-> /restapi/v10.2/Objects/Services
+> /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys2']/service/entry[@name='T56593_CJP8BD_iaas']
 
 ### Payload API PaloAlto
 
 ```json
 {
-  "entry": {
-    "@name": "TCP-63000",
-    "description": "TCP-63000",
-    "protocol": {
-      "tcp": {
-        "port": "63000",
-      }
-    }
+  "Name":"TCP-63000",
+  "Path":"service",
+  "Port": {
+    "Port":"63000"
   }
 }
 ```
@@ -80,24 +64,14 @@ flowchart TD
   L --> M
 ```
 
-## Payload no Micro Serviço
-
-```json
-{
-  "Name":"TCP-63000",
-}
-```
-
 ### End-Point API PaloAlto
 
-> /restapi/v10.2/Objects/Services
+> /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys2']/service/entry[@name='T56593_CJP8BD_iaas']
 
 ### Payload API PaloAlto
 
 ```json
 {
-  "entry": {
-    "@name": "TCP-63000"
-  }
+  "Name":"TCP-63000"
 }
 ```
