@@ -13,9 +13,7 @@ flowchart TD
   D --> F[Montar payload]
   F --> G[client.Exists.payload]
   G -- não --> E[Retornar core.ERROR]
-  G --> I[Utilizar router]
-
-  G -- existe --> I
+  G -- existe --> I[Utilizar router]
   I --> L([End])
   E --> L([End])
   
