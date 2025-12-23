@@ -2,7 +2,7 @@
 
 ## Micro Serviço paloalto-router
 
-### Fluxo - Service Create
+### Fluxo - Get Router
 
 ```mermaid
 flowchart TD
@@ -12,13 +12,12 @@ flowchart TD
   D -- não --> E[Retornar core.ERROR]
   D --> F[Montar payload]
   F --> G[client.Exists.payload]
-  G -- não --> H[client.Create.payload]
+  G -- não --> E[Retornar core.ERROR]
   H -- erro --> E
-  H --> I[Próximo router]
+  H --> I[Utilizar router]
 
   G -- existe --> I
   I --> C
-  C --> J[Portas Processadas]
   J --> K[Retornar COMPLETED]
   E --> L([End])
   K --> L

@@ -51,6 +51,56 @@ flowchart TD
 }
 ```
 
+
+### Fluxo - Rule Edit
+
+
+```mermaid
+flowchart TD
+  A([Inicio]) --> C[Processa regras];
+  C --> D{Config existe?};
+  D -- Nao --> E[ERROR];
+  D -- Sim --> F[Consulta regra];
+
+  F --> G{Existe?};
+
+  G -- Nao --> H[Edita regra];
+  H --> I{Sucesso?};
+  I -- Sim --> J[Mover];
+  I -- Nao --> E;
+  J --> T;
+
+  G -- Sim --> L{Schedule?};
+  L -- Sim --> M[Cria schedule];
+  M --> N{Sucesso?};
+  N -- Sim --> O[Mover];
+  N -- Nao --> E;
+  O --> T[COMPLETD];
+
+  T --> C;
+
+```
+
+### End-Point API PaloAlto - Security Rule
+
+> /config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys2']/rule/entry[@name='T56593_CJP8BD_iaas']
+
+### Payload API PaloAlto - Security Rule
+
+```json
+{
+  "Name": "T56593_CJP8BD_iaas-6",
+  "Path": "rule",
+  "ServiceRule": {
+    "Member": [
+      "TCP-9001",
+      "TCP-9000",
+      "TCP-443"
+    ]
+  }
+}
+```
+
 ### Fluxo - Rule Delete
 
 ```mermaid
