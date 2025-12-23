@@ -4,11 +4,13 @@
 
 ## Fluxo - Public-Address Create
 
-```mermaid
+**Obs:** A criação de Public-Address não utiliza serviços como é feito no delete, pois é criado diretamente no api-nemesis que é o microservico principal do gateway, e segue o fluxo normal de criação de host
 
-```
+### Serviços envolvidos na criação
 
-### Serviços envolvidos
+- [fluxo de host](paloalto-host.md#fluxo---host-create)
+
+### Serviços envolvidos no delete
 
 - [v2.1.paloalto.rule.delete](paloalto-rule.md#fluxo---rule-delete)
 - [v2.2.paloalto.rule.edit](paloalto-rule.md#fluxo---rule-edit)
