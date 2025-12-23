@@ -7,20 +7,18 @@
 ```mermaid
 flowchart TD
   A([Start]) --> B[GetTransactionID]
-  B --> C{Para cada router}
+  B --> C[Para cada router]
   C --> D[Checar Firewall]
   D -- não --> E[Retornar core.ERROR]
   D --> F[Montar payload]
   F --> G[client.Exists.payload]
   G -- não --> E[Retornar core.ERROR]
-  H -- erro --> E
-  H --> I[Utilizar router]
+  G --> I[Utilizar router]
 
   G -- existe --> I
-  I --> C
-  J --> K[Retornar COMPLETED]
+  I --> L([End])
   E --> L([End])
-  K --> L
+  
 ```
 
 ### End-Point API PaloAlto
