@@ -1,4 +1,4 @@
-# PUBLIC_ADDRESS
+# PUBLIC-ADDRESS
 
 **Objetivo:** Criar e gerenciar os endereço de IP Público para o ambiente da organização .
 
